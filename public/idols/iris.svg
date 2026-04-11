@@ -1,0 +1,18 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 540) rotate(90) scale(620 620)">
+      <stop stop-color="#F6F6F6"/>
+      <stop offset="1" stop-color="#111111"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="url(#a)"/>
+  <g stroke="#F4F4F4" stroke-opacity="0.7" stroke-width="4">
+    <circle cx="600" cy="620" r="360"/>
+    <circle cx="600" cy="620" r="280"/>
+    <circle cx="600" cy="620" r="200"/>
+    <circle cx="600" cy="620" r="120"/>
+  </g>
+  <rect x="250" y="940" width="700" height="240" rx="120" fill="#F5F5F5" fill-opacity="0.14"/>
+  <path d="M390 1030C470 950 730 950 810 1030" stroke="#EFEFEF" stroke-width="6"/>
+  <text x="140" y="1410" fill="#F4F4F4" font-family="monospace" font-size="40" letter-spacing="7">IRIS / SPECTRAL FEED</text>
+</svg>
