@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 
 import { CinematicLink } from "@/components/cinematic-link";
@@ -21,6 +21,7 @@ import {
   maxCompatibilityScore,
 } from "@/lib/compatibility-questions";
 import { cn } from "@/lib/utils";
+import { useAppState } from "@/context/stateContext";
 
 type Verdict = {
   title: string;
@@ -33,7 +34,7 @@ const getVerdict = (purity: number): Verdict => {
   if (purity >= 85) {
     return {
       title: "Eternelle en devenir",
-      subtitle: "Ta compatibilite virtuelle est critique et stable.",
+      subtitle: "Ta compatibilité virtuelle est critique et stable.",
       detail:
         "Tu rejettes la banlieue, la fatigue organique et la peur du temps. Le protocole recommande une migration vers l'image complete.",
       badgeVariant: "default",
@@ -43,30 +44,39 @@ const getVerdict = (purity: number): Verdict => {
   if (purity >= 60) {
     return {
       title: "Zone de Transition",
-      subtitle: "Tu oscilles encore entre chair et synthese.",
+      subtitle: "Tu oscilles encore entre chair et synthèse.",
       detail:
-        "Ton desir de purete est reel, mais quelques attaches au monde physique restent actives. Une exposition prolongee a la Galerie des Idoles est conseillee.",
+        "Ton desir de pureté est reel, mais quelques attaches au monde physique restent actives. Une exposition prolongée a la Galerie des Idoles est conseillée.",
       badgeVariant: "secondary",
     };
   }
 
   return {
-    title: "Ancrage Corporel Persistant",
+    title: "àncrage Corporel Persistant",
     subtitle: "Le reel conserve encore la priorite.",
     detail:
-      "Tu supportes encore trop le poids organique du quotidien. Le dispositif peut etre relance plus tard, lorsque le besoin d'abstraction deviendra vital.",
+      "Tu supportes encore trop le poids organique du quotidien. Le dispositif peut être relance plus tard, lorsque le besoin d'abstraction deviendra vital.",
     badgeVariant: "outline",
   };
 };
 
 export function CompatibilityQuiz() {
+  const { setQuizPassed } = useAppState() ?? {};
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [answers, setànswers] = useState<Record<number, string>>({});
 
   const totalQuestions = compatibilityQuestions.length;
   const isFinished = currentIndex >= totalQuestions;
   const currentQuestion = !isFinished ? compatibilityQuestions[currentIndex] : null;
   const selectedValue = currentQuestion ? answers[currentIndex] ?? "" : "";
+
+  const isVirtual = Object.values(answers).some(val => val === "oui");
+
+  useEffect(() => {
+    if (isFinished && isVirtual && setQuizPassed) {
+      setQuizPassed(true);
+    }
+  }, [isFinished, isVirtual, setQuizPassed]);
 
   const totalScore = useMemo(
     () =>
@@ -93,7 +103,7 @@ export function CompatibilityQuiz() {
   const verdict = getVerdict(purity);
 
   const handleSelect = (value: string) => {
-    setAnswers((previous) => ({
+    setànswers((previous) => ({
       ...previous,
       [currentIndex]: value,
     }));
@@ -112,7 +122,7 @@ export function CompatibilityQuiz() {
   };
 
   const restart = () => {
-    setAnswers({});
+    setànswers({});
     setCurrentIndex(0);
   };
 
@@ -140,7 +150,7 @@ export function CompatibilityQuiz() {
           <CardHeader className="space-y-3">
             <Badge variant={verdict.badgeVariant}>{verdict.title}</Badge>
             <CardTitle className="font-heading text-4xl leading-none sm:text-5xl">
-              {purity}% de Purete de Synthese
+              {purity}% de Pureté de Synthèse
             </CardTitle>
             <CardDescription className="text-base text-muted-foreground">
               {verdict.subtitle}
@@ -164,7 +174,7 @@ export function CompatibilityQuiz() {
               </article>
               <article className="rounded-xl border bg-card/70 p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  Compatibilite
+                  Compatibilité
                 </p>
                 <p className="mt-2 text-2xl font-semibold">{totalScore}</p>
               </article>
@@ -186,15 +196,27 @@ export function CompatibilityQuiz() {
               <RotateCcw className="size-4" />
               Refaire le test
             </Button>
-            <CinematicLink
-              href="/galerie"
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "rounded-full px-5 text-center"
-              )}
-            >
-              Explorer la Galerie des Idoles
-            </CinematicLink>
+            {isVirtual ? (
+              <CinematicLink
+                href="/creation"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "rounded-full px-5 text-center bg-zinc-100 text-zinc-950 hover:bg-zinc-300"
+                )}
+              >
+                àCCÉDER àU STUDIO DE CRÉàTION
+              </CinematicLink>
+            ) : (
+              <CinematicLink
+                href="/galerie"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "rounded-full px-5 text-center"
+                )}
+              >
+                Explorer la Galerie des Idoles
+              </CinematicLink>
+            )}
           </CardFooter>
         </Card>
       </main>
@@ -233,7 +255,7 @@ export function CompatibilityQuiz() {
             {currentQuestion.prompt}
           </CardTitle>
           <CardDescription>
-            Reponds intuitivement. Chaque choix ajuste ton indice de migration.
+            Réponds intuitivement. Chaque choix ajuste ton indice de migration.
           </CardDescription>
           <Progress value={completion}>
             <ProgressLabel>Progression du protocole</ProgressLabel>
@@ -270,11 +292,11 @@ export function CompatibilityQuiz() {
 
         <CardFooter className="flex flex-wrap items-center justify-between gap-3">
           <Button variant="outline" onClick={goToPrevious} disabled={currentIndex === 0}>
-            Question precedente
+            Question précédente
           </Button>
           <Button onClick={goToNext} disabled={!selectedValue}>
             {currentIndex === totalQuestions - 1
-              ? "Calculer ma purete"
+              ? "Calculer ma pureté"
               : "Question suivante"}
             <ArrowRight className="size-4" />
           </Button>

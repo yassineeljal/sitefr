@@ -5,6 +5,10 @@ import {
   Space_Grotesk,
 } from "next/font/google";
 import { TransitionProvider } from "@/components/transition-provider";
+import { StateProvider } from "@/context/stateContext";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Navbar } from "@/components/navbar";
 import "./globals.css";
 
 const bodyFont = Space_Grotesk({
@@ -26,9 +30,8 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Atelier de Purete de Synthese",
-  description:
-    "Experience narrative sur la tension entre corps reel et image virtuelle.",
+  title: "ANOUK-OS // Atelier de Pureté",
+  description: "Expérience narrative sur la tension entre corps réel et image virtuelle.", 
 };
 
 export default function RootLayout({
@@ -39,10 +42,18 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
+      suppressHydrationWarning
       className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <TransitionProvider>{children}</TransitionProvider>
+      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <StateProvider>
+            <Navbar />
+            <TransitionProvider>{children}</TransitionProvider>
+            {/* Le bouton est ici, fixe sur tout le site */}
+            <ThemeToggle />
+          </StateProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
