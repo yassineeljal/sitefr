@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAppState } from "@/context/stateContext";
 
 export default function CreationPage() {
@@ -15,6 +16,15 @@ export default function CreationPage() {
   const [density, setDensity] = useState(50);
   const [fatigueSuppressed, setFatigueSuppressed] = useState(false);
   const [isCompiling, setIsCompiling] = useState(false);
+
+  const getTextureImage = (texture: string) => {
+    switch (texture) {
+      case "Marbre poli": return "/assets/image_avatar_marbre.png";
+      case "Lumière pure": return "/assets/image_avatar_lumiere.png";
+      case "Pixels": return "/assets/image_avatar_pixel.png";
+      default: return "/assets/image_avatar_marbre.png";
+    }
+  };
 
   useEffect(() => {
     if (quizPassed === false) {
@@ -34,7 +44,7 @@ export default function CreationPage() {
       if (addAvatar) {
         addAvatar({
           id: crypto.randomUUID(),
-          name: name || "Entit� Anonyme",
+          name: name || "Entité Anonyme",
           texture,
           resolution,
           sublimeLevel,
@@ -58,18 +68,24 @@ export default function CreationPage() {
             <span className="absolute w-2 h-2 bg-foreground animate-ping" />
           </div>
           <p className="animate-pulse">Compilation du maillage en cours...</p>
-          <p className="text-muted-foreground opacity-50 text-xs">[ABSENCE DE FATIGUE : CONFIRM�E]</p>
+          <p className="text-muted-foreground opacity-50 text-xs">[ABSENCE DE FATIGUE : CONFIRMÉE]</p>
         </div>
       ) : (
         <div className="relative z-10 w-full max-w-2xl bg-background border border-border p-8 tech-text">
           <header className="space-y-3 border-b border-border pb-6 mb-6">
-            <h1 className="font-heading text-3xl uppercase tracking-[0.2em] text-center text-foreground">Studio de Synth�se</h1>
+            <h1 className="font-heading text-3xl uppercase tracking-[0.2em] text-center text-foreground">Studio de Synthèse</h1>
             <p className="text-muted-foreground text-center text-sm uppercase tracking-wider">
               Démarrage du processus d&apos;abstraction. Élimination du corps organique.
             </p>
           </header>
           
           <form id="avatar-form" onSubmit={handleGenerate} className="space-y-6">
+            <div className="mb-6 flex justify-center">
+              <div className="relative aspect-square w-32 md:w-48 overflow-hidden bg-zinc-900 border border-border">
+                <Image src={getTextureImage(texture)} alt={texture} fill className="object-cover grayscale" />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <label htmlFor="name" className="text-xs uppercase tracking-widest text-foreground font-bold">Nom de l&apos;entité</label>
               <input
@@ -85,7 +101,7 @@ export default function CreationPage() {
 
             <div className="grid sm:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label htmlFor="texture" className="text-xs uppercase tracking-widest text-foreground font-bold">Texture (Rev�tement)</label>
+                <label htmlFor="texture" className="text-xs uppercase tracking-widest text-foreground font-bold">Texture (Revêtement)</label>
                 <select
                   id="texture"
                   value={texture}
@@ -93,13 +109,13 @@ export default function CreationPage() {
                   className="w-full bg-background border border-border px-4 py-3 text-sm text-foreground focus:outline-none focus:border-foreground transition-colors"
                 >
                   <option value="Marbre poli">Marbre poli</option>
-                  <option value="Lumi�re pure">Lumi�re pure</option>
+                  <option value="Lumière pure">Lumière pure</option>
                   <option value="Pixels">Pixels</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="resolution" className="text-xs uppercase tracking-widest text-foreground font-bold">R�solution</label>
+                <label htmlFor="resolution" className="text-xs uppercase tracking-widest text-foreground font-bold">Résolution</label>
                 <select
                   id="resolution"
                   value={resolution}
@@ -108,7 +124,7 @@ export default function CreationPage() {
                 >
                   <option value="8K">8K</option>
                   <option value="16K">16K</option>
-                  <option value="�ternit�">�ternit�</option>
+                  <option value="Éternité">Éternité</option>
                 </select>
               </div>
             </div>
@@ -165,7 +181,7 @@ export default function CreationPage() {
                 type="submit"
                 className="w-full bg-foreground text-background border border-foreground hover:bg-background hover:text-foreground transition-colors font-bold uppercase tracking-widest py-4 text-sm"
               >
-                G�N�RER
+                GÉNÉRER
               </button>
             </div>
           </form>
